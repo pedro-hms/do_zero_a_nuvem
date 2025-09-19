@@ -31,3 +31,16 @@ Cypress.Commands.add('fillMandatoryFieldsAndSubmit', () => {
   cy.get('#open-text-area').type(longText, { delay: 0 })
   cy.get('.button[type="submit"').click()
 })
+
+Cypress.Commands.add('fillMandatoryFieldsAndSubmitv2', (cliente = {
+    firstName: "Pedro",
+    lastName: "Medeiros",
+    email: "pedro@pedro.com"
+}) => {
+  const longText = 'Teste do Teste para motivos de Teste'.repeat(10)
+  cy.get('#firstName').type(cliente.firstName)
+  cy.get('#lastName').type(cliente.lastName)
+  cy.get('#email').type(cliente.email)
+  cy.get('#open-text-area').type(longText, { delay: 0 })
+  cy.get('.button[type="submit"').click()
+})
