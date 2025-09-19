@@ -29,7 +29,8 @@ Cypress.Commands.add('fillMandatoryFieldsAndSubmit', () => {
   cy.get('#lastName').type('Medeiros')
   cy.get('#email').type('pedro@pedro.com')
   cy.get('#open-text-area').type(longText, { delay: 0 })
-  cy.get('.button[type="submit"').click()
+  //cy.get('.button[type="submit"').click()
+  cy.contains('button','Enviar').click()
 })
 
 Cypress.Commands.add('fillMandatoryFieldsAndSubmitv2', (cliente = {
@@ -42,5 +43,6 @@ Cypress.Commands.add('fillMandatoryFieldsAndSubmitv2', (cliente = {
   cy.get('#lastName').type(cliente.lastName)
   cy.get('#email').type(cliente.email)
   cy.get('#open-text-area').type(longText, { delay: 0 })
-  cy.get('.button[type="submit"').click()
+  //cy.get('.button[type="submit"').click()
+  cy.contains('button','Enviar').click()
 })
