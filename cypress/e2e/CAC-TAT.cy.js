@@ -5,7 +5,7 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     cy.visit('./src/index.html')
   })
 
-  it('verifica o título da aplicação', () => {
+  it('consulta o título da aplicação', () => {
     cy.title().should('be.equal', 'Central de Atendimento ao Cliente TAT')
   })
 
@@ -18,7 +18,7 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     //cy.get('.button[type="submit"').click()
     cy.contains('button','Enviar').click()
 
-    cy.get('.success').should('be.visible')
+    cy.get('.success').should('be.visible') //consulta se a mensagem de sucesso está visível
   })
 
   it('exibe mensagem de erro ao submeter o formulário com um email com formatação inválida', () => {
@@ -124,5 +124,64 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     cy.get('input[type="radio"][value="feedback"]')
     .check()
     .should('have.value', 'feedback')
+    .should('be.checked')
   })
+
+  it('marca cada tipo de atendimento', () => {
+    cy.get('input[type="radio"]')
+    .should('have.length', 3)
+    .each(($radio) => {
+      cy.wrap($radio).check()
+      cy.wrap($radio).should('be.checked')
+    })
+  })
+
+  it('marca ambos checkboxes, depois desmarca o último', () => {
+    cy.get('input[type="checkbox"]')
+    .check()
+    .should('be.checked') //consulta se ambos estão marcados
+    .last()
+    .uncheck()
+    .should('not.be.checked') //consulta se o último está desmarcado
+  })
+
+  it('seleciona um arquivo da pasta fixtures', () => {
+    cy.get('input[type="file"]#file-upload')
+    .should('not.have.value')
+    .selectFile('./cypress/fixtures/example.json')
+    .should(($input) => {
+      expect($input[0].files[0].name).to.equal('example.json')  //teste de asserção
+    })
+  })
+
+  it('seleciona um arquivo simulando um drag-and-drop', () => {
+    cy.get('input[type="file"]#file-upload')
+    .should('not.have.value')
+    .selectFile('./cypress/fixtures/example.json', { action: 'drag-drop' })
+    .should(($input) => {
+      expect($input[0].files[0].name).to.equal('example.json')  //teste de asserção
+    })
+  })
+
+  it('seleciona um arquivo utilizando uma fixture para a qual foi dada um alias', () => {
+    cy.fixture('example.json').as('sampleFile') //cria um alias para o arquivo
+    cy.get('input[type="file"]#file-upload') //seleciona o input
+    .should('not.have.value') //verifica se o input não tem valor
+    .selectFile('@sampleFile') //usa o alias para selecionar o arquivo
+    .should(($input) => {
+      expect($input[0].files[0].name).to.equal('example.json')  //teste de asserção
+    })
+  })  
+
+  it('verifica que a política de privacidade abre em outra aba sem a necessidade de um clique', () => {
+    cy.get('#privacy a').should('have.attr', 'target', '_blank') //verifica se o atributo target é _blank
+  })
+
+  it('acessa a página da política de privacidade removendo o target e então clicando no link', () => {
+    cy.get('#privacy a')
+    .invoke('removeAttr', 'target') //remove o atributo target
+    .click()
+    cy.contains('Talking About Testing').should('be.visible') //verifica se o texto está visível
+  })
+
 })
